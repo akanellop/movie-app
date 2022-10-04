@@ -1,7 +1,15 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
+const mongoose = require("mongoose");
 
 const app = express();
+mongoose.connect(process.env.DATABASE_URL);
+const db = mongoose.connection;
+db.on("error", (error) => console.log(error));
+db.once("open", () => console.log("Connected to Mongoose"));
 
 const indexRouter = require("./routes/index");
 
