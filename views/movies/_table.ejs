@@ -1,0 +1,10 @@
+<% if (locals.movies?.length) {%>
+<% movies.forEach(movie=>{ %>
+<div><%=movie.title%></div>
+<div><%=movie.description%></div>
+<div><%=movie.username%></div>
+<div><%=movie.countOfLikes%></div>
+<div><%=movie.countOfHates%></div>
+<div><%=movie.createdAt%></div>
+<%})%>
+<%}%>

@@ -12,7 +12,7 @@ const db = mongoose.connection;
 db.on("error", (error) => console.log(error));
 db.once("open", () => console.log("Connected to Mongoose"));
 
-const indexRouter = require("./routes/index");
+const moviesRouter = require("./routes/movies");
 const userRouter = require("./routes/users");
 
 app.set("view engine", "ejs");
@@ -22,7 +22,7 @@ app.use(expressLayouts);
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
 
-app.use("/", indexRouter);
+app.use("/", moviesRouter);
 app.use("/users", userRouter);
 
 app.listen(process.env.PORT || 3000);
