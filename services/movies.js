@@ -38,7 +38,6 @@ async function createNew(req, res) {
     await movie.save();
     res.redirect(`/`);
   } catch (error) {
-    console.log(error);
     res.render("movies/new", {
       errorMessage: "Error creating new movie post",
     });
