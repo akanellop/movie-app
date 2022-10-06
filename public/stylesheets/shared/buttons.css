@@ -38,3 +38,17 @@
 .btn-inline:hover {
     color: white;
 }
+
+.btn-rate {
+    font-size:20px;
+    color:rgb(105, 97, 128)
+}
+
+.btn-rate-like :hover{
+   color:rgb(39, 114, 39);
+}
+
+.btn-rate-hate :hover{
+    color:rgb(182, 50, 50);
+ }
+

@@ -9,7 +9,6 @@ async function getAll(req, res) {
       //TODO FIX display somehting else with other way
       if (movie.createdAt)
         movie.createdDate = `${movie.createdAt.getDate()}/${movie.createdAt.getMonth()}/${movie.createdAt.getYear()}`;
-      console.log(movie.createdDate);
       return movie;
     });
     res.render("movies/index", { movies: moviesChanged });
