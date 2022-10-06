@@ -5,7 +5,14 @@ async function getAll(req, res) {
     const moviesArray = await Movie.find({}).populate({
       path: "username",
     });
-    res.render("movies/index", { movies: moviesArray });
+    const moviesChanged = moviesArray.map((movie) => {
+      //TODO FIX display somehting else with other way
+      if (movie.createdAt)
+        movie.createdDate = `${movie.createdAt.getDate()}/${movie.createdAt.getMonth()}/${movie.createdAt.getYear()}`;
+      console.log(movie.createdDate);
+      return movie;
+    });
+    res.render("movies/index", { movies: moviesChanged });
   } catch (error) {
     res.render("movies/index", {
       errorMessage: "Error in returning movies list",

@@ -32,13 +32,7 @@
 }
 
 .btn-inline {
-    color: var(--color-btn-secondary-text);
-    background-color: var(--color-btn-secondary-background);
-    font-size: 20px;
-    display:flex;
-    align-items:flex-start;
-    border:0;
-    border-radius: 0;
+    text-decoration:none;
 }
 
 .btn-inline:hover {

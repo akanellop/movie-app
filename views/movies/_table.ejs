@@ -1,10 +1,17 @@
 <% if (locals.movies?.length) {%>
+
     <% movies.forEach(movie=>{ %>
-        <div><%=movie.title%></div>
-        <div><%=movie.description%></div>
-        <div><a class="btn btn-inline" href="/<%=movie.username %>/posts" ><%=movie.username%></a></div>
-        <div><%=movie.countOfLikes%></div>
-        <div><%=movie.countOfHates%></div>
-        <div><%=movie.createdAt%></div>
+        <div class="table-item">
+            <div class= "item-header">
+                <div class = "item-title"><%=movie.title%></div>
+                <div>Posted by: <a class="btn-inline" href="/<%=movie.username %>/posts" ><%=movie.username%></a> in <div><%=movie.createdDate%></div></div>
+            </div>
+            <div><%=movie.description%></div>
+            <div class = "item-footer">
+                <div><%=movie.countOfLikes%></div> | <div><%=movie.countOfHates%></div>
+            </div>
+        </div>
+
     <%})%>
+
 <%}%>
