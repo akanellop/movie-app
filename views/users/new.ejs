@@ -1,6 +1,8 @@
-<h2>New user</h2>
+<h2 class="page-header">Sign up!</h2>
 <form action="/users/new" method="POST">
     <%- include('_form_fields')%>
-<a href='/'>Cancel</a>
-<button type="submit">Sign Up</button>
+    <div class="btn-row"></div>
+        <a class="btn btn-primary" href='/'>Cancel</a>
+        <button class="btn btn-primary" type="submit">Continue</button>
+    </div>
 </form>

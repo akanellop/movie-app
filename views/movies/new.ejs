@@ -1,6 +1,8 @@
-<h2>Post a movie!</h2>
+<h2 class="page-header">Post a movie!</h2>
 <form action="/new" method="POST">
-<%- include('_form_fields')%>
-<a href='/'>Cancel</a>
-<button type="submit">Continue</button>
+    <%- include('_form_fields')%>
+    <div class = 'btn-row'></div>
+        <a class="btn btn-primary" href='/'>Cancel</a>
+        <button class="btn btn-primary" type="submit">Continue</button>
+    </div>
 </form>
