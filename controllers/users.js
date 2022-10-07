@@ -8,7 +8,20 @@ const User = require("../models/user");
 //   res.render("users/new", { user: new User() });
 // }
 
-async function signup(req, res) {
+async function register(req, res) {
+  const user = new User({
+    username: req.body.username,
+    password: req.body.password,
+  });
+  try {
+    await user.save();
+    res.redirect(`/`);
+  } catch (err) {
+    res.render("users/new", { user, errorMessage: "Error creating the user" });
+  }
+}
+
+async function login(req, res) {
   const user = new User({
     username: req.body.username,
     password: req.body.password,
@@ -22,7 +35,6 @@ async function signup(req, res) {
 }
 
 module.exports = {
-  // loginView,
-  //signupView,
-  signup,
+  register,
+  login,
 };

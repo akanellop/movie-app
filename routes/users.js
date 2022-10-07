@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const userServices = require("../services/users");
+const usersController = require("../controllers/users");
 
 router.get("/login", (req, res) => res.render("users/login"));
-router.get("/new", (req, res) => res.render("users/new"));
+router.get("/new", (req, res) => res.render("users/register"));
 
-router.post("/new", userServices.signup);
+router.post("/", usersController.register);
+router.put("/", usersController.login);
 
 // router.get("/:id", (req, res) => {
 //   res.render("users/user");

@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const movieService = require("../services/movies");
+const moviesController = require("../controllers/movies");
 
-router.get("/", movieService.getAll);
-router.get("/:username/posts", movieService.getSpecificUser);
+router.get("/", moviesController.getAll);
+router.get("/:username/posts", moviesController.getSpecificUser);
 
 router.get("/new", (req, res) => {
   res.render("movies/new");
 });
-router.post("/new", movieService.createNew);
+router.post("/new", moviesController.createNew);
 
 module.exports = router;
