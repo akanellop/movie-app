@@ -2,15 +2,31 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 const express = require("express");
+const session = require("express-session");
 const expressLayouts = require("express-ejs-layouts");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
 const app = express();
+
+const passport = require("passport");
+const { loginAuthentication } = require("./auth/passport");
+loginAuthentication(passport);
+
 mongoose.connect(process.env.DATABASE_URL);
 const db = mongoose.connection;
 db.on("error", (error) => console.log(error));
 db.once("open", () => console.log("Connected to Mongoose"));
+
+app.use(
+  session({
+    secret: "movieramaSecret234adas!@!",
+    saveUninitialized: true,
+    resave: true,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 const moviesRouter = require("./routes/movies");
 const userRouter = require("./routes/users");

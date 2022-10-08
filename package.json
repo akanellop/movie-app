@@ -20,10 +20,14 @@
   },
   "homepage": "https://github.com/akanellop/movies-app#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
     "express-ejs-layouts": "^2.5.1",
-    "mongoose": "^6.6.4"
+    "express-session": "^1.17.3",
+    "mongoose": "^6.6.4",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "dotenv": "^16.0.3",
