@@ -11,8 +11,13 @@
 <body>
     <div class="container">
         <br>
+        <% if(true){ %>
+            <%- include('../partials/headerRegistered.ejs') %>
+            <% } else{ %>  
             <%- include('../partials/headerUnregistered.ejs') %>
+            <% } %>
             <div class="inner-container">
+                
                 <%- include('../partials/errorMessage.ejs') %>
                 <%- body %>
             </div>
