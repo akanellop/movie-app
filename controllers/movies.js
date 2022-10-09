@@ -1,12 +1,16 @@
 const Movie = require("../models/movie");
 const { errorHandler } = require("../handlers/errorHandler");
 const { redirectPage, renderView } = require("../handlers/respondHandler");
+const { getSortingForListing } = require("../utils/moviesUtils");
 
 async function getAll(req, res) {
   try {
-    const moviesArray = await Movie.find({}).populate({
-      path: "username",
-    });
+    const sortingValue = req.query.sorting ?? "date";
+
+    const moviesArray = await Movie.find({}).sort(
+      getSortingForListing(sortingValue)
+    );
+
     if (!moviesArray.length) {
       errorHandler(req, res, "No movies found!", "movies/index");
     }
@@ -35,9 +39,12 @@ async function getAll(req, res) {
 async function getSpecificUser(req, res) {
   const usernameParam = req.params.username;
   try {
-    const moviesArray = await Movie.find({
-      username: usernameParam,
-    });
+    const sortingValue = req.query.sorting ?? "date";
+
+    const moviesArray = await Movie.find({ username: usernameParam }).sort(
+      getSortingForListing(sortingValue)
+    );
+
     if (!moviesArray.length) {
       errorHandler(req, res, "No movies found for this user!", "movies/index");
     }

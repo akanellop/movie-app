@@ -1,3 +1,11 @@
+
+<ul>
+    <li><button  onClick="addUrlParameter('sorting', 'date')">Date</button></li>
+    <li><button  onClick="addUrlParameter('sorting', 'likes')">Likes</button></li>
+    <li><button  onClick="addUrlParameter('sorting', 'hates')">Hates</button></li>
+</ul>
+
+
 <% if (locals.movies?.length) {%>
 
     <% movies.forEach(movie=>{ %>
@@ -15,5 +23,13 @@
         </div>
 
     <%})%>
-
 <%}%>
+
+
+<script>
+    function addUrlParameter(name, value) {
+        var searchParams = new URLSearchParams(window.location.search)
+        searchParams.set(name, value)
+        window.location.search = searchParams.toString()
+    }
+</script>
