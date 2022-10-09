@@ -2,7 +2,11 @@ const passport = require("passport");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const { errorHandler } = require("../handlers/errorHandler");
-const { redirectPage, renderView } = require("../handlers/respondHandler");
+const {
+  redirectPage,
+  renderView,
+  statusRespond,
+} = require("../handlers/respondHandler");
 
 function getLoginView(req, res) {
   renderView(req, res, "users/login");
@@ -26,7 +30,7 @@ async function signup(req, res) {
   } catch (err) {
     console.log(`Error occured on`);
     console.log(err);
-    errorHandler(req, res, "users/signup", "Sorry :( Error in signup");
+    return errorHandler(req, res, "users/signup", "Sorry :( Error in signup");
   }
 }
 
@@ -35,7 +39,7 @@ async function login(req, res) {
     const { username, password } = req.body;
 
     if (!username || !password) {
-      errorHandler(req, res, "users/login", "Μissing fields");
+      return errorHandler(req, res, "users/login", "Μissing fields");
     }
 
     passport.authenticate("local", {
@@ -46,14 +50,16 @@ async function login(req, res) {
   } catch (err) {
     console.log(`Error occured on`);
     console.log(err);
-    errorHandler(req, res, "users/login", "Sorry :( Error in login");
+    return errorHandler(req, res, "users/login", "Sorry :( Error in login");
   }
 }
 
 function logout(req, res) {
   req.logOut((err) => {
-    if (err) next(err);
-    redirectPage(req, res, "/login");
+    if (err) {
+      statusRespond(req, res, 500, {});
+    }
+    statusRespond(req, res, 200, {});
   });
 }
 
