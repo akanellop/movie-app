@@ -6,9 +6,8 @@ const { protectRoute } = require("../auth/protect");
 router.get("/", moviesController.getAll);
 router.get("/:username/posts", moviesController.getSpecificUser);
 
-router.get("/new", protectRoute, (req, res) => {
-  res.render("movies/new");
-});
+router.get("/new", protectRoute, moviesController.getPostNewMovieView);
+
 router.post("/new", moviesController.createNew);
 
 module.exports = router;

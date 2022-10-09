@@ -1,16 +1,16 @@
 const passport = require("passport");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
+const { redirectPage, renderView } = require("../handlers/respondHandler");
 
-// function loginView(req, res) {
-//   res.render("users/login", { user: new User() });
-// }
+function getLoginView(req, res) {
+  renderView(req, res, "users/login");
+}
+function getSignupView(req, res) {
+  renderView(req, res, "users/new");
+}
 
-// function signupView(req, res) {
-//   res.render("users/new", { user: new User() });
-// }
-
-async function register(req, res) {
+async function signup(req, res) {
   const user = new User({
     username: req.body.username,
     password: req.body.password,
@@ -21,9 +21,9 @@ async function register(req, res) {
 
     user.password = passwordHashed;
     await user.save();
-    res.redirect(`/login`);
+    redirectPage(req, res, `/login`);
   } catch (err) {
-    res.render("users/register", {
+    res.render("users/signup", {
       user,
       errorMessage: "Error creating the user",
     });
@@ -54,12 +54,14 @@ async function login(req, res) {
 function logout(req, res) {
   req.logOut((err) => {
     if (err) next(err);
-    res.redirect("login");
+    redirectPage(req, res, "/login");
   });
 }
 
 module.exports = {
-  register,
+  signup,
   login,
   logout,
+  getLoginView,
+  getSignupView,
 };

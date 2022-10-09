@@ -1,5 +1,6 @@
 const Movie = require("../models/movie");
 const { errorHandler } = require("../handlers/errorHandler");
+const { redirectPage, renderView } = require("../handlers/respondHandler");
 
 async function getAll(req, res) {
   try {
@@ -15,7 +16,7 @@ async function getAll(req, res) {
         movie.createdDate = `${movie.createdAt.getDate()}/${movie.createdAt.getMonth()}/${movie.createdAt.getYear()}`;
       return movie;
     });
-    res.render("movies/index", { movies: moviesChanged, user: req.user });
+    renderView(req, res, "movies/index", { movies: moviesChanged });
   } catch (error) {
     console.log(`Error occured on`);
     console.log(error);
@@ -40,7 +41,8 @@ async function getSpecificUser(req, res) {
     if (!moviesArray.length) {
       errorHandler(req, res, "No movies found for this user!", "movies/index");
     }
-    res.render("movies/userProfile", { movies: moviesArray });
+
+    renderView(req, res, "movies/userProfile", { movies: moviesArray });
   } catch (error) {
     console.log(`Error occured on`);
     console.log(error);
@@ -67,7 +69,7 @@ async function createNew(req, res) {
       errorHandler(req, res, "Please provide title!", "movies/new");
     }
     await movie.save();
-    res.redirect(`/`);
+    redirectPage(req, res, "/");
   } catch (error) {
     console.log(`Error occured on`);
     console.log(error);
@@ -83,4 +85,8 @@ async function createNew(req, res) {
   }
 }
 
-module.exports = { getAll, getSpecificUser, createNew };
+function getPostNewMovieView(req, res) {
+  renderView(req, res, "movies/new");
+}
+
+module.exports = { getAll, getSpecificUser, createNew, getPostNewMovieView };
