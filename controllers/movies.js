@@ -5,14 +5,16 @@ const {
   renderView,
   statusRespond,
 } = require("../handlers/respondHandler");
-const { getSortingForListing } = require("../utils/moviesUtils");
+const {
+  getSortingForListing,
+  formatDateOfCreation,
+} = require("../utils/moviesUtils");
 const ratingsServices = require("../services/ratings");
 const rating = require("../models/rating");
 
 async function getAll(req, res) {
   try {
     const sortingValue = req.query.sorting ?? "date";
-
     const moviesArray = await Movie.find({}).sort(
       getSortingForListing(sortingValue)
     );
@@ -20,12 +22,12 @@ async function getAll(req, res) {
     if (!moviesArray.length) {
       return errorHandler(req, res, "movies/index", "No movies found!");
     }
+
     const moviesChanged = moviesArray.map((movie) => {
-      //TODO FIX display somehting else with other way
-      if (movie.createdAt)
-        movie.createdDate = `${movie.createdAt.getDate()}/${movie.createdAt.getMonth()}/${movie.createdAt.getYear()}`;
+      movie.createdDate = formatDateOfCreation(movie.createdAt);
       return movie;
     });
+
     renderView(req, res, "movies/index", { movies: moviesChanged });
   } catch (error) {
     console.log(`Error occured on`);
@@ -59,8 +61,12 @@ async function getSpecificUser(req, res) {
         "movies/index"
       );
     }
+    const moviesChanged = moviesArray.map((movie) => {
+      movie.createdDate = formatDateOfCreation(movie.createdAt);
+      return movie;
+    });
 
-    renderView(req, res, "movies/userProfile", { movies: moviesArray });
+    renderView(req, res, "movies/userProfile", { movies: moviesChanged });
   } catch (error) {
     console.log(`Error occured on`);
     console.log(error);

@@ -1,10 +1,14 @@
 function getSortingForListing(sortingValue) {
   const SORTING_STAGE = {
     date: { createdAt: -1 },
-    likes: { numberOfLikes: -1 },
-    hates: { numberOfHates: -1 },
+    likes: { countOfLikes: -1 },
+    hates: { countOfHates: -1 },
   };
   return SORTING_STAGE[sortingValue];
 }
 
-module.exports = { getSortingForListing };
+function formatDateOfCreation(date) {
+  return date.toISOString().replace(/T/, " ").replace(/\..+/, "");
+}
+
+module.exports = { getSortingForListing, formatDateOfCreation };
