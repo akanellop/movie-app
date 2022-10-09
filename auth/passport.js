@@ -4,24 +4,25 @@ const User = require("../models/user");
 
 async function loginAuthentication(passport) {
   passport.use(
-    new LocalStrategy(
-      { usernameField: "username" },
-      async (username, password, done) => {
-        const userFound = await User.findOne({ username });
-        if (!userFound) {
-          console.log("wrong username");
-          return done();
-        }
-
-        const isMatch = await bcrypt.compare(password, userFound.password);
-        if (isMatch) {
-          return done(null, userFound);
-        } else {
-          console.log("Wrong password");
-          return done();
-        }
+    new LocalStrategy({ usernameField: "username" }, async function (
+      username,
+      password,
+      done
+    ) {
+      const userFound = await User.findOne({ username });
+      if (!userFound) {
+        console.log("wrong username");
+        return done();
       }
-    )
+
+      const isMatch = await bcrypt.compare(password, userFound.password);
+      if (isMatch) {
+        return done(null, userFound);
+      } else {
+        console.log("Wrong password");
+        return done();
+      }
+    })
   );
 
   passport.serializeUser((user, done) => {

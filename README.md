@@ -29,6 +29,7 @@ To run the app locally
 
 Future enhancements are
 
+- DTOs for validate and transfering data between views and controllers
 - unit testing
 - JWT user authentication
 - integration of documentation generation

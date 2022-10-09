@@ -1,35 +1,30 @@
-const Movie = require("../models/movie");
 const { errorHandler } = require("../handlers/errorHandler");
 const {
   redirectPage,
   renderView,
   statusRespond,
 } = require("../handlers/respondHandler");
-const {
-  getSortingForListing,
-  formatDateOfCreation,
-} = require("../utils/moviesUtils");
+const { formatDateOfCreation } = require("../utils/moviesUtils");
+const moviesService = require("../services/movies");
+const moviesRepository = require("../repositories/movies");
 const { parseRate } = require("../utils/ratingsUtils");
-const ratingsServices = require("../services/ratings");
-const Rating = require("../models/rating");
+const ratingsService = require("../services/ratings");
 
+// Get generic list of all posted movies
 async function getAll(req, res) {
   try {
     const sortingValue = req.query.sorting ?? "date";
-    const moviesArray = await Movie.find({}).sort(
-      getSortingForListing(sortingValue)
-    );
-
-    if (!moviesArray.length) {
+    const movies = await moviesService.getMoviesList(sortingValue);
+    if (!movies.length) {
       return errorHandler(req, res, "movies/index", "No movies found!");
     }
 
-    const moviesChanged = moviesArray.map((movie) => {
+    const moviesForRendering = movies.map((movie) => {
       movie.createdDate = formatDateOfCreation(movie.createdAt);
       return movie;
     });
 
-    renderView(req, res, "movies/index", { movies: moviesChanged });
+    renderView(req, res, "movies/index", { movies: moviesForRendering });
   } catch (error) {
     console.log(`Error occured on`);
     console.log(error);
@@ -45,16 +40,15 @@ async function getAll(req, res) {
   }
 }
 
+// Get movies posted by a specific user
 async function getSpecificUser(req, res) {
-  const usernameParam = req.params.username;
   try {
+    const username = req.params.username;
     const sortingValue = req.query.sorting ?? "date";
 
-    const moviesArray = await Movie.find({ username: usernameParam }).sort(
-      getSortingForListing(sortingValue)
-    );
+    const movies = await moviesService.getMoviesList(sortingValue, username);
 
-    if (!moviesArray.length) {
+    if (!movies.length) {
       return errorHandler(
         req,
         res,
@@ -62,12 +56,12 @@ async function getSpecificUser(req, res) {
         "movies/index"
       );
     }
-    const moviesChanged = moviesArray.map((movie) => {
+    const moviesForRendering = movies.map((movie) => {
       movie.createdDate = formatDateOfCreation(movie.createdAt);
       return movie;
     });
 
-    renderView(req, res, "movies/userProfile", { movies: moviesChanged });
+    renderView(req, res, "movies/userProfile", { movies: moviesForRendering });
   } catch (error) {
     console.log(`Error occured on`);
     console.log(error);
@@ -83,17 +77,18 @@ async function getSpecificUser(req, res) {
   }
 }
 
+// Post new movie
 async function createNew(req, res) {
   try {
-    const movie = new Movie({
+    const newMovie = {
       username: req.user.username,
       title: req.body.title,
       description: req.body.description,
-    });
-    if (!movie.title) {
+    };
+    if (!newMovie.title) {
       return errorHandler(req, res, "movies/new", "Please provide title!");
     }
-    await movie.save();
+    await moviesRepository.saveNew(newMovie);
     redirectPage(req, res, "/");
   } catch (error) {
     console.log(`Error occured on`);
@@ -110,10 +105,14 @@ async function createNew(req, res) {
   }
 }
 
+// Render post new movie form
 function getPostNewMovieView(req, res) {
   renderView(req, res, "movies/new");
 }
 
+// Handled Fetch API call
+// Handles new rate of user.
+// A user can like or hate a movie, he/she can retract a previous rate and he/she cannot rate his/her own posts
 async function rateMovie(req, res) {
   try {
     const movieId = req.params.id;
@@ -126,25 +125,22 @@ async function rateMovie(req, res) {
       });
     }
 
-    const movie = await Movie.findOne({ _id: movieId, username: user });
-    if (movie) {
+    const movie = await moviesRepository.findById(movieId);
+    if (movie && movie.username === user) {
       console.log("You cannot rate your post!");
       return statusRespond(req, res, 400, {
         error: "You cannot rate your post!",
       });
     }
 
-    const existingRating = await Rating.findOne({
-      movie: movieId,
-      username: user,
-    });
+    const existingRating = await userRatingForMovie(movieId, user);
     if (existingRating && existingRating.rate === rate) {
-      await ratingsServices.removeRating(existingRating._id);
+      await ratingsService.retractRating(existingRating._id);
     } else {
-      await ratingsServices.addRating(movieId, user, rate);
+      await ratingsService.addRatingOfUserForMovie(movieId, user, rate);
     }
 
-    await ratingsServices.updateMovieRatings(movieId);
+    await ratingsService.updateMovieRatings(movieId);
     return statusRespond(req, res, 200, {});
   } catch (error) {
     console.log(`Error occured on`);

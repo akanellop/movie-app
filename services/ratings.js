@@ -1,33 +1,25 @@
-const Rating = require("../models/rating");
-const Movie = require("../models/movie");
+const moviesRepository = require("../repositories/movies");
+const ratingsRepository = require("../repositories/ratings");
 
-function addRating(movieId, user, rate) {
-  return Rating.updateOne(
-    { user, movie: movieId },
-    { $set: { rate } },
-    { upsert: true }
-  );
+function addRatingOfUserForMovie(movieId, user, rate) {
+  return ratingsRepository.addRating(movieId, user, rate);
 }
 
 async function updateMovieRatings(movieId) {
   const [countOfLikes, countOfHates] = await Promise.all([
-    Rating.count({ movie: movieId, rate: "like" }),
-    Rating.count({ movie: movieId, rate: "hate" }),
+    ratingsRepository.getCountsOfMovieLikes(movieId),
+    ratingsRepository.getCountsOfMovieHates(movieId),
   ]);
 
-  return Movie.updateOne(
-    { _id: movieId },
-    {
-      $set: {
-        countOfLikes,
-        countOfHates,
-      },
-    }
+  return moviesRepository.updateMovieRatingsCounters(
+    movieId,
+    countOfLikes,
+    countOfHates
   );
 }
 
-function removeRating(_id) {
-  return Rating.updateOne({ _id }, { $unset: { rate: 1 } });
+function retractRating(_id) {
+  return ratingsRepository.retractRating();
 }
 
-module.exports = { addRating, updateMovieRatings, removeRating };
+module.exports = { addRatingOfUserForMovie, updateMovieRatings, retractRating };
