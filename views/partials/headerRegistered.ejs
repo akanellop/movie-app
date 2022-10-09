@@ -10,11 +10,11 @@
 </header>
 
 <script>
-    function callLogoutApi() {
-        fetch("/users/logout", {
+    async function callLogoutApi() {
+       await fetch("/users/logout", {
             method: "POST",
         });
+        location.assign('/users/login');
     }
-    location.assign('/users/login');
 </script>
 

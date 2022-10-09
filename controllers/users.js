@@ -1,13 +1,14 @@
 const passport = require("passport");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
+const { errorHandler } = require("../handlers/errorHandler");
 const { redirectPage, renderView } = require("../handlers/respondHandler");
 
 function getLoginView(req, res) {
   renderView(req, res, "users/login");
 }
 function getSignupView(req, res) {
-  renderView(req, res, "users/new");
+  renderView(req, res, "users/signup");
 }
 
 async function signup(req, res) {
@@ -21,12 +22,11 @@ async function signup(req, res) {
 
     user.password = passwordHashed;
     await user.save();
-    redirectPage(req, res, `/login`);
+    redirectPage(req, res, `./login`);
   } catch (err) {
-    res.render("users/signup", {
-      user,
-      errorMessage: "Error creating the user",
-    });
+    console.log(`Error occured on`);
+    console.log(err);
+    errorHandler(req, res, "users/signup", "Sorry :( Error in signup");
   }
 }
 
@@ -35,7 +35,7 @@ async function login(req, res) {
     const { username, password } = req.body;
 
     if (!username || !password) {
-      throw new Error("missing fields");
+      errorHandler(req, res, "users/login", "Μissing fields");
     }
 
     passport.authenticate("local", {
@@ -44,10 +44,9 @@ async function login(req, res) {
       failureFlash: true,
     })(req, res);
   } catch (err) {
+    console.log(`Error occured on`);
     console.log(err);
-    res.render("users/login", {
-      errorMessage: "Error in login",
-    });
+    errorHandler(req, res, "users/login", "Sorry :( Error in login");
   }
 }
 

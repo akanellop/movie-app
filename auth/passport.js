@@ -13,7 +13,7 @@ async function loginAuthentication(passport) {
           return done();
         }
 
-        const isMatch = bcrypt.compare(password, userFound.password);
+        const isMatch = await bcrypt.compare(password, userFound.password);
         if (isMatch) {
           return done(null, userFound);
         } else {
