@@ -9,8 +9,9 @@ const {
   getSortingForListing,
   formatDateOfCreation,
 } = require("../utils/moviesUtils");
+const { parseRate } = require("../utils/ratingsUtils");
 const ratingsServices = require("../services/ratings");
-const rating = require("../models/rating");
+const Rating = require("../models/rating");
 
 async function getAll(req, res) {
   try {
@@ -117,9 +118,7 @@ async function rateMovie(req, res) {
   try {
     const movieId = req.params.id;
     const user = req.user?.username;
-    const rateParsed = JSON.stringify(Object.keys(req.body)[0]);
-    const rate = rateParsed.slice(1, rateParsed.length - 1);
-
+    const rate = parseRate(req.body);
     if (!user) {
       console.log("Please login to rate a movie!");
       return statusRespond(req, res, 400, {
@@ -135,12 +134,16 @@ async function rateMovie(req, res) {
       });
     }
 
-    const existingRating = await rating.findOne({ movieId, username: user });
+    const existingRating = await Rating.findOne({
+      movie: movieId,
+      username: user,
+    });
     if (existingRating && existingRating.rate === rate) {
       await ratingsServices.removeRating(existingRating._id);
     } else {
       await ratingsServices.addRating(movieId, user, rate);
     }
+
     await ratingsServices.updateMovieRatings(movieId);
     return statusRespond(req, res, 200, {});
   } catch (error) {

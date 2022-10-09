@@ -11,13 +11,18 @@ function addRating(movieId, user, rate) {
 
 async function updateMovieRatings(movieId) {
   const [countOfLikes, countOfHates] = await Promise.all([
-    Rating.count({ movieId, rate: "like" }),
-    Rating.count({ movieId, rate: "hate" }),
+    Rating.count({ movie: movieId, rate: "like" }),
+    Rating.count({ movie: movieId, rate: "hate" }),
   ]);
 
   return Movie.updateOne(
     { _id: movieId },
-    { $set: { countOfLikes, countOfHates } }
+    {
+      $set: {
+        countOfLikes,
+        countOfHates,
+      },
+    }
   );
 }
 
