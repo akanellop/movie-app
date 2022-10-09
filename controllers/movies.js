@@ -9,6 +9,7 @@ const moviesService = require("../services/movies");
 const moviesRepository = require("../repositories/movies");
 const { parseRate } = require("../utils/ratingsUtils");
 const ratingsService = require("../services/ratings");
+const ratingsRepository = require("../repositories/ratings");
 
 // Get generic list of all posted movies
 async function getAll(req, res) {
@@ -133,7 +134,10 @@ async function rateMovie(req, res) {
       });
     }
 
-    const existingRating = await userRatingForMovie(movieId, user);
+    const existingRating = await ratingsRepository.userRatingForMovie(
+      movieId,
+      user
+    );
     if (existingRating && existingRating.rate === rate) {
       await ratingsService.retractRating(existingRating._id);
     } else {

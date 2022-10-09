@@ -1,5 +1,4 @@
 const Movie = require("../models/movie");
-const { updateMovieRatings } = require("../services/ratings");
 
 function findById(_id) {
   return Movie.findById(_id);
@@ -9,10 +8,11 @@ function findMovies(findQuery, sortingQuery) {
 }
 
 function saveNew(movie) {
-  return Movie.save(movie);
+  const movieModel = new Movie(movie);
+  return movieModel.save();
 }
 
-function updateMovieRatingsCounters() {
+function updateMovieRatingsCounters(movieId, countOfLikes, countOfHates) {
   return Movie.updateOne(
     { _id: movieId },
     {

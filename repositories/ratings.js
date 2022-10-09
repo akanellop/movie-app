@@ -7,7 +7,7 @@ function userRatingForMovie(movieId, username) {
   });
 }
 
-function addRating(user, movie, rate) {
+function addRating(movie, user, rate) {
   return Rating.updateOne(
     { user, movie },
     { $set: { rate } },
