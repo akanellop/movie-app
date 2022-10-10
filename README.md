@@ -34,7 +34,7 @@ Tech:
 - unit testing
 - integration of documentation generation (eg Swagger)
 - new error class for expected errors and exceptions
-- ehanced app logging for dev investigations
+- ehanced app logging for dev investigations  
 UI:
 - better UI error logging for user notifications
 - search bar
