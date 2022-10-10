@@ -29,10 +29,14 @@ To run the app locally
 
 Future enhancements are
 
+Tech:
 - DTOs for validate and transfering data between views and controllers
 - unit testing
-- JWT user authentication
-- integration of documentation generation
-- better UI error logging
+- integration of documentation generation (eg Swagger)
+- new error class for expected errors and exceptions
+- ehanced app logging for dev investigations
+UI:
+- better UI error logging for user notifications
 - search bar
 - pagination
+
