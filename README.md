@@ -12,12 +12,12 @@ Current user actions are
 - posting your movie description and review
 - rate other people's posts
 
-The app follows the MVC architectural pattern and is written in Node.js, utilising Expess framework,
+The app follows the MVC architectural pattern and is written in Node.js, utilising Expess framework,  
 for the server implementation, the session handling and the views rendering.
 
 ## How to run the app
 
-One can run the test instance of the app by visiting https://movierama-mvc-application.herokuapp.com .
+One can run the test instance of the app by visiting https://movierama-mvc-application.herokuapp.com .  
 To run the app locally
 
 - clone the repository
@@ -29,13 +29,11 @@ To run the app locally
 
 Future enhancements are
 
-Tech:
 - DTOs for validate and transfering data between views and controllers
 - unit testing
 - integration of documentation generation (eg Swagger)
 - new error class for expected errors and exceptions
-- ehanced app logging for dev investigations  
-UI:
+- ehanced app logging for dev investigations
 - better UI error logging for user notifications
 - search bar
 - pagination
